@@ -8,7 +8,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-app.use(cors());
+app.use(cors({ AllowedHeaders: ["Content-Type", "Authorization"] }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
