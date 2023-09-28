@@ -28,16 +28,21 @@ const Booking = () => {
 
       <div>
         <h3>Select your booking slot below</h3>
-        <p className="para2">select slot:</p>
       </div>
       <div>
         <ul className="list">
-          {sessions.map((session) => (
-            <li className="session mb-4" key={session.id}>
-              {session.date}
-              {session.slot_type}
-            </li>
-          ))}
+          {sessions.map((session) => {
+            console.log("this sessions", sessions)
+            return (
+              <div key={session.id}>
+                <li className="session-list">
+                  {session.date}
+                  {session.volunteer_id}
+                  {session.slot_type}
+                </li>
+              </div>
+            );
+          })}
         </ul>
       </div>
     </div>
