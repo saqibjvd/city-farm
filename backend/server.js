@@ -1,25 +1,14 @@
 const express = require("express");
 const app = express();
+const port = process.env.PORT || 3000;
+const cors = require("cors");
 
 const bodyParser = require("body-parser");
-const cors = require("cors");
-const port = process.env.PORT || 3000;
 const dotenv = require("dotenv");
-
-dotenv.config();
-
-app.use(cors({ AllowedHeaders: ["Content-Type", "Authorization"] }));
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-// const db = new Pool({
-//   user: process.env.user,
-//   host: process.env.host,
-//   database: process.env.database,
-//   password: process.env.password,
-//   port: process.env.port,
-//   ssl: true
-// });
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors({ AllowedHeaders: ["Content-Type", "Authorization"] }));
+dotenv.config();
 
 const { Pool } = require("pg");
 const db = new Pool({
@@ -32,6 +21,9 @@ db.connect(function (err) {
   console.log("Connected!");
 });
 
+app.get("/", function(req, res) {
+  res.send("<h1>Welcome to City Farm</h1>")
+})
 
 app.get("/sessions", function (req, res) {
   db.query("SELECT * FROM sessions")
@@ -40,16 +32,7 @@ app.get("/sessions", function (req, res) {
     })
     .catch((err) => {
       console.log(err);
-    });
-});
-
-app.get("/volunteers", function (req, res) {
-  db.query("SELECT * FROM volunteers")
-    .then((result) => {
-      res.status(200).json({ sessions: result.rows });
-    })
-    .catch((err) => {
-      console.log(err);
+      res.status(500).json({ error: "failed to fetch sessions" });
     });
 });
 

@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Booking = () => {
   const [sessions, setSessions] = useState([]);
 
-  const getSessions = () => {
-    try {
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  useEffect(() => {
+    fetch("http://localhost:3000/sessions", {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setSessions(data);
+        console.log(data);
+      })
+      .catch((error) => console.log(error));
+  }, [sessions]);
 
   return (
     <div>
@@ -23,36 +28,17 @@ const Booking = () => {
 
       <div>
         <h3>Select your booking slot below</h3>
-        <p className="para2">Fill in details then select time:</p>
+        <p className="para2">select slot:</p>
       </div>
-      <div className="container">
-        <form className="contact">
-          <label>
-            Name:
-            <input type="text" name="name" required />
-          </label>{" "}
-          <br></br>
-          <label>
-            Email:
-            <input type="email" name="email" required />
-          </label>
-          <br></br>
-          <label>
-            phone:
-            <input type="tel" name="phone" required />
-          </label>
-          <div>
-            <ul>
-              <li>date 1</li>
-              <li>date 2</li>
-              <li>date 3</li>
-              <li>date 4</li>
-              <li>date 5</li>
-            </ul>
-          </div>
-          <br></br>
-          <input type="submit" value="Submit" />
-        </form>
+      <div>
+        <ul className="list">
+          {sessions.map((session) => (
+            <li className="session mb-4" key={session.id}>
+              {session.date}
+              {session.slot_type}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
