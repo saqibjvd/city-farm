@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Booking = () => {
+function Booking() {
   const [sessions, setSessions] = useState([]);
 
   useEffect(() => {
@@ -9,12 +9,13 @@ const Booking = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        setSessions(data);
-        console.log(data);
+        setSessions(data.sessions);
+        console.log(data.sessions);
       })
       .catch((error) => console.log(error));
-  }, [sessions]);
+  }, []);
 
+  console.log("this is sessions......>", sessions);
   return (
     <div>
       <div className="para1">
@@ -30,16 +31,23 @@ const Booking = () => {
         <h3>Select your booking slot below</h3>
       </div>
       <div>
-        <ul className="list">
-          {sessions.map((session) => {
-            console.log("this sessions", sessions)
+        <ul>
+          {sessions.map((session, index) => {
             return (
               <div key={session.id}>
                 <li className="session-list">
-                  {session.date}
-                  {session.volunteer_id}
-                  {session.slot_type}
+                  <strong>Date: </strong>{session.date} <br></br>
+                  <strong> Slot time: </strong>{session.slot_type}
                 </li>
+               
+                <div>
+                {session.volunteer_id === null ? (
+                  <button className="btn">Book Slot</button>
+                ) : (
+                  `This ${session.slot_type} session is already booked, please choose another one...`
+                )}
+
+                </div>
               </div>
             );
           })}
