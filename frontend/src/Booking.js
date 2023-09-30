@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-function Booking() {
+function Booking() { // show all sessions
   const [sessions, setSessions] = useState([]);
+
+  const [confirmBooking, setConfirmBooking] = useState(false)
+
 
   useEffect(() => {
     fetch("http://localhost:3000/sessions", {
@@ -10,12 +13,27 @@ function Booking() {
       .then((response) => response.json())
       .then((data) => {
         setSessions(data.sessions);
-        console.log(data.sessions);
+        // console.log(data.sessions);
       })
       .catch((error) => console.log(error));
   }, []);
 
-  console.log("this is sessions......>", sessions);
+ const bookingStatus = async (id) =>{
+  
+  try{
+    const url = `http://localhost:3000/sessions/${id}`
+    const response = await fetch(url, {method: "PUT"})
+    const result = await response.json()
+    setConfirmBooking(true);
+    // call colourchange if conformation bookig == true then call that function.
+    // make sire database is working as expected 
+    console.log(result)
+  }
+  catch(error){
+console.log(error)
+  }
+  }
+
   return (
     <div>
       <div className="para1">
@@ -36,17 +54,21 @@ function Booking() {
             return (
               <div key={session.id}>
                 <li className="session-list">
-                  <strong>Date: </strong>{session.date} <br></br>
-                  <strong> Slot time: </strong>{session.slot_type}
+                  <strong>Date: </strong>
+                  {session.date}
                 </li>
-               
+                <li>
+                  <strong> Slot time: </strong>
+                  {session.slot_type} {session.booked}
+                </li>
                 <div>
-                {session.volunteer_id === null ? (
-                  <button className="btn">Book Slot</button>
-                ) : (
-                  `This ${session.slot_type} session is already booked, please choose another one...`
-                )}
-
+                  {session.volunteer_id === null ? (
+                    <button className="btn" onClick={bookingStatus} >
+                      Book Slot
+                    </button>
+                  ) : (
+                    `This ${session.slot_type} session is already booked, please choose another one...`
+                  )}
                 </div>
               </div>
             );
